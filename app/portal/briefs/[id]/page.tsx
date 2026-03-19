@@ -43,8 +43,8 @@ function InfoRow({ label, value }: { label: string; value?: string | number }) {
   if (!value) return null;
   return (
     <div className="flex flex-col gap-1">
-      <p className="text-xs uppercase tracking-wider font-medium text-gray-500">{label}</p>
-      <p className="text-sm text-gray-200">{value}</p>
+      <p className="text-xs uppercase tracking-wider font-medium" style={{ color: "var(--color-text-muted)" }}>{label}</p>
+      <p className="text-sm" style={{ color: "var(--color-text)" }}>{value}</p>
     </div>
   );
 }
@@ -95,32 +95,42 @@ export default function BriefDetailPage() {
     setSubmitting(false);
   }
 
-  if (loading) return <div className="text-gray-400 p-8">Loading brief…</div>;
-  if (!brief) return <div className="text-red-400 p-8">Brief not found.</div>;
+  if (loading) return (
+    <div className="p-8 flex items-center justify-center">
+      <div className="w-6 h-6 rounded-full border-2 border-t-transparent animate-spin" style={{ borderColor: "var(--color-coral)" }} />
+    </div>
+  );
+  if (!brief) return <div className="p-8 text-sm" style={{ color: "var(--color-danger)" }}>Brief not found.</div>;
 
   const content = brief.content || {};
   const history = brief.history || [];
   const canAction = brief.status === "awaiting_approval";
 
   return (
-    <div className="space-y-8 max-w-3xl">
+    <div className="p-6 lg:p-8 max-w-3xl space-y-8">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-white mb-2">{brief.title}</h1>
+      <div>
+        <div className="flex items-center gap-2 mb-2">
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-1.5 text-sm transition-colors hover:underline"
+            style={{ color: "var(--color-text-muted)" }}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Briefs
+          </button>
+        </div>
+        <div className="flex items-start justify-between gap-4">
+          <h1 className="text-2xl font-bold" style={{ color: "var(--color-text)" }}>{brief.title}</h1>
           <BriefStatusBadge status={brief.status} />
         </div>
-        <button
-          onClick={() => router.back()}
-          className="text-sm text-gray-400 hover:text-white transition-colors"
-        >
-          ← Back
-        </button>
       </div>
 
       {/* Content */}
-      <div className="rounded-xl p-6 space-y-5" style={{ background: "#1a1f2e", border: "1px solid rgba(255,255,255,0.08)" }}>
-        <h2 className="text-sm font-semibold text-white">Campaign Details</h2>
+      <div className="card-surface rounded-2xl p-6 space-y-5">
+        <h2 className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>Campaign Details</h2>
         <div className="grid sm:grid-cols-2 gap-5">
           <InfoRow label="Campaign Name" value={content.campaignName} />
           <InfoRow label="Objective" value={content.objective} />
@@ -130,20 +140,20 @@ export default function BriefDetailPage() {
 
         {content.targetAudience && (
           <div>
-            <p className="text-xs uppercase tracking-wider font-medium text-gray-500 mb-1">Target Audience</p>
-            <p className="text-sm text-gray-200">{content.targetAudience}</p>
+            <p className="text-xs uppercase tracking-wider font-medium mb-1" style={{ color: "var(--color-text-muted)" }}>Target Audience</p>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--color-text)" }}>{content.targetAudience}</p>
           </div>
         )}
 
         {content.adFormats && content.adFormats.length > 0 && (
           <div>
-            <p className="text-xs uppercase tracking-wider font-medium text-gray-500 mb-2">Ad Formats</p>
+            <p className="text-xs uppercase tracking-wider font-medium mb-2" style={{ color: "var(--color-text-muted)" }}>Ad Formats</p>
             <div className="flex gap-2 flex-wrap">
               {content.adFormats.map((f: string) => (
                 <span
                   key={f}
-                  className="px-2.5 py-0.5 rounded-full text-xs capitalize"
-                  style={{ background: "rgba(255,255,255,0.08)", color: "#d1d5db" }}
+                  className="px-2.5 py-1 rounded-full text-xs font-medium capitalize"
+                  style={{ background: "var(--color-surface-2)", color: "var(--color-text)" }}
                 >
                   {f}
                 </span>
@@ -154,31 +164,31 @@ export default function BriefDetailPage() {
 
         {content.creativeDirection && (
           <div>
-            <p className="text-xs uppercase tracking-wider font-medium text-gray-500 mb-1">Creative Direction</p>
-            <p className="text-sm text-gray-200 leading-relaxed">{content.creativeDirection}</p>
+            <p className="text-xs uppercase tracking-wider font-medium mb-1" style={{ color: "var(--color-text-muted)" }}>Creative Direction</p>
+            <p className="text-sm leading-relaxed" style={{ color: "var(--color-text)" }}>{content.creativeDirection}</p>
           </div>
         )}
 
         {content.kpiTargets && (
           <div>
-            <p className="text-xs uppercase tracking-wider font-medium text-gray-500 mb-3">KPI Targets</p>
+            <p className="text-xs uppercase tracking-wider font-medium mb-3" style={{ color: "var(--color-text-muted)" }}>KPI Targets</p>
             <div className="grid grid-cols-3 gap-4">
               {content.kpiTargets.roas && (
-                <div className="text-center p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.04)" }}>
-                  <p className="text-xs text-gray-400">ROAS</p>
-                  <p className="text-lg font-bold text-white">{content.kpiTargets.roas}x</p>
+                <div className="text-center p-3 rounded-xl" style={{ background: "var(--color-surface-2)" }}>
+                  <p className="text-xs mb-1" style={{ color: "var(--color-text-muted)" }}>ROAS</p>
+                  <p className="text-lg font-bold" style={{ color: "var(--color-text)" }}>{content.kpiTargets.roas}x</p>
                 </div>
               )}
               {content.kpiTargets.cpp && (
-                <div className="text-center p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.04)" }}>
-                  <p className="text-xs text-gray-400">CPP</p>
-                  <p className="text-lg font-bold text-white">${content.kpiTargets.cpp}</p>
+                <div className="text-center p-3 rounded-xl" style={{ background: "var(--color-surface-2)" }}>
+                  <p className="text-xs mb-1" style={{ color: "var(--color-text-muted)" }}>CPP</p>
+                  <p className="text-lg font-bold" style={{ color: "var(--color-text)" }}>${content.kpiTargets.cpp}</p>
                 </div>
               )}
               {content.kpiTargets.ctr && (
-                <div className="text-center p-3 rounded-lg" style={{ background: "rgba(255,255,255,0.04)" }}>
-                  <p className="text-xs text-gray-400">CTR</p>
-                  <p className="text-lg font-bold text-white">{content.kpiTargets.ctr}%</p>
+                <div className="text-center p-3 rounded-xl" style={{ background: "var(--color-surface-2)" }}>
+                  <p className="text-xs mb-1" style={{ color: "var(--color-text-muted)" }}>CTR</p>
+                  <p className="text-lg font-bold" style={{ color: "var(--color-text)" }}>{content.kpiTargets.ctr}%</p>
                 </div>
               )}
             </div>
@@ -186,43 +196,48 @@ export default function BriefDetailPage() {
         )}
       </div>
 
-      {/* Actions */}
+      {/* Actions — hidden if already approved */}
       {canAction && (
         <div className="space-y-4">
           <div className="flex gap-3">
             <button
               onClick={handleApprove}
               disabled={submitting}
-              className="px-6 py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-50"
-              style={{ background: "#22c55e", color: "white" }}
+              className="px-6 py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-50 text-white"
+              style={{ background: "var(--color-success)" }}
             >
-              Approve Brief
+              {submitting ? "Approving…" : "Approve Brief"}
             </button>
             <button
               onClick={() => setShowChangesInput(!showChangesInput)}
               className="px-6 py-3 rounded-xl text-sm font-semibold border transition-all"
-              style={{ borderColor: "rgba(255,107,71,0.4)", color: "#FF6B47" }}
+              style={{ borderColor: "var(--color-coral)", color: "var(--color-coral)" }}
             >
               Request Changes
             </button>
           </div>
           {showChangesInput && (
-            <div className="space-y-3">
+            <div className="card-surface rounded-2xl p-5 space-y-3">
+              <p className="text-sm font-medium" style={{ color: "var(--color-text)" }}>What changes would you like to see?</p>
               <textarea
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
-                placeholder="Describe the changes you'd like to see…"
+                placeholder="Describe the changes clearly so we can action them quickly…"
                 rows={4}
-                className="w-full px-4 py-3 rounded-xl text-sm bg-transparent text-white placeholder-gray-600 resize-none"
-                style={{ border: "1px solid rgba(255,255,255,0.15)" }}
+                className="w-full px-4 py-3 rounded-xl text-sm resize-none outline-none transition-all"
+                style={{
+                  background: "var(--color-surface)",
+                  border: "1px solid var(--color-border)",
+                  color: "var(--color-text)",
+                }}
               />
               <button
                 onClick={handleRequestChanges}
                 disabled={submitting || !feedback.trim()}
-                className="px-5 py-2.5 rounded-lg text-sm font-medium transition-all disabled:opacity-50"
-                style={{ background: "#FF6B47", color: "white" }}
+                className="px-5 py-2.5 rounded-lg text-sm font-semibold text-white transition-all disabled:opacity-50"
+                style={{ background: "var(--color-coral)" }}
               >
-                Submit Feedback
+                {submitting ? "Submitting…" : "Submit Feedback"}
               </button>
             </div>
           )}
@@ -232,21 +247,20 @@ export default function BriefDetailPage() {
       {/* History */}
       {history.length > 0 && (
         <div>
-          <h2 className="text-sm font-semibold text-white mb-4">History</h2>
+          <h2 className="text-sm font-semibold mb-4" style={{ color: "var(--color-text)" }}>Status History</h2>
           <div className="space-y-3">
             {history.map((h, i) => (
               <div
                 key={i}
-                className="flex gap-3 p-4 rounded-lg"
-                style={{ background: "#1a1f2e", border: "1px solid rgba(255,255,255,0.06)" }}
+                className="card-surface flex gap-3 p-4 rounded-xl"
               >
-                <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0" style={{ background: "#FF6B47" }} />
+                <div className="w-2 h-2 rounded-full mt-1.5 flex-shrink-0" style={{ background: "var(--color-coral)" }} />
                 <div>
-                  <p className="text-sm text-white capitalize">{h.status.replace(/_/g, " ")}</p>
-                  {h.feedback && <p className="text-xs text-gray-400 mt-1">{h.feedback}</p>}
-                  <p className="text-xs text-gray-600 mt-1">
+                  <p className="text-sm font-medium capitalize" style={{ color: "var(--color-text)" }}>{h.status.replace(/_/g, " ")}</p>
+                  {h.feedback && <p className="text-xs mt-1 leading-relaxed" style={{ color: "var(--color-text-muted)" }}>{h.feedback}</p>}
+                  <p className="text-xs mt-1" style={{ color: "var(--color-text-subtle)" }}>
                     {new Date(h.timestamp).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "2-digit", minute: "2-digit" })}
-                    {h.by ? ` by ${h.by}` : ""}
+                    {h.by ? ` · ${h.by}` : ""}
                   </p>
                 </div>
               </div>
