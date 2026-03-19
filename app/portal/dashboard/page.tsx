@@ -183,8 +183,8 @@ export default async function DashboardPage() {
       }
     }
 
-    const campaignTotalSpend = campaign.metrics.reduce((s, m) => s + m.spend, 0);
-    const campaignTotalRevenue = campaign.metrics.reduce((s, m) => s + m.revenue, 0);
+    const campaignTotalSpend = campaign.metrics.reduce((s: number, m: { spend: number }) => s + m.spend, 0);
+    const campaignTotalRevenue = campaign.metrics.reduce((s: number, m: { revenue: number }) => s + m.revenue, 0);
     const campaignRoas = campaignTotalSpend > 0 ? campaignTotalRevenue / campaignTotalSpend : 0;
     topCampaignsByRoas.push({ name: campaign.name, roas: campaignRoas });
   }

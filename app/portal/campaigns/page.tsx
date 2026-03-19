@@ -53,8 +53,8 @@ export default async function CampaignsPage() {
   });
 
   const campaigns = sorted.map((c) => {
-    const spend = c.metrics.reduce((s, m) => s + m.spend, 0);
-    const revenue = c.metrics.reduce((s, m) => s + m.revenue, 0);
+    const spend = c.metrics.reduce((s: number, m: { spend: number }) => s + m.spend, 0);
+    const revenue = c.metrics.reduce((s: number, m: { revenue: number }) => s + m.revenue, 0);
     const roas = spend > 0 ? revenue / spend : null;
     return { ...c, totalSpend: spend, roas };
   });

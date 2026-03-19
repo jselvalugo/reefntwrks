@@ -61,7 +61,7 @@ export default async function ReportsPage() {
                 </tr>
               </thead>
               <tbody>
-                {client.reports.map((report, i) => (
+                {client.reports.map((report: typeof client.reports[number], i: number) => (
                   <tr
                     key={report.id}
                     className="hover:bg-gray-50 transition-colors"

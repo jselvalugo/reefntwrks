@@ -39,88 +39,106 @@ export default function PortalSettingsPage() {
   }
 
   return (
-    <div className="max-w-lg space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-white">Settings</h1>
-        <p className="text-sm text-gray-400 mt-1">Update your profile and preferences</p>
+    <div className="p-6 lg:p-8 max-w-xl">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold" style={{ color: "var(--color-text)" }}>Settings</h1>
+        <p className="text-sm mt-1" style={{ color: "var(--color-text-muted)" }}>Update your profile and notification preferences</p>
       </div>
 
       <form onSubmit={handleSave} className="space-y-6">
-        <div
-          className="p-6 rounded-xl space-y-5"
-          style={{ background: "#1a1f2e", border: "1px solid rgba(255,255,255,0.08)" }}
-        >
-          <h2 className="text-sm font-semibold text-white">Profile</h2>
+        {/* Profile */}
+        <div className="card-surface rounded-2xl p-6 space-y-5">
+          <h2 className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>Profile</h2>
 
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Display Name</label>
+            <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--color-text)" }}>Display Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg text-sm text-white bg-transparent"
-              style={{ border: "1px solid rgba(255,255,255,0.15)" }}
+              className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
+              style={{
+                background: "var(--color-surface)",
+                border: "1px solid var(--color-border)",
+                color: "var(--color-text)",
+              }}
             />
           </div>
 
           <div>
-            <label className="block text-xs text-gray-400 mb-1.5">Email</label>
+            <label className="block text-sm font-medium mb-1.5" style={{ color: "var(--color-text)" }}>Email Address</label>
             <input
               type="email"
               value={session?.user?.email || ""}
               disabled
-              className="w-full px-4 py-2.5 rounded-lg text-sm text-gray-500 bg-transparent cursor-not-allowed"
-              style={{ border: "1px solid rgba(255,255,255,0.08)" }}
+              className="w-full px-4 py-3 rounded-xl text-sm cursor-not-allowed"
+              style={{
+                background: "var(--color-surface-2)",
+                border: "1px solid var(--color-border)",
+                color: "var(--color-text-muted)",
+              }}
             />
+            <p className="mt-1.5 text-xs" style={{ color: "var(--color-text-subtle)" }}>Email cannot be changed here.</p>
           </div>
         </div>
 
-        <div
-          className="p-6 rounded-xl space-y-4"
-          style={{ background: "#1a1f2e", border: "1px solid rgba(255,255,255,0.08)" }}
-        >
-          <h2 className="text-sm font-semibold text-white">Notification Preferences</h2>
+        {/* Notification preferences */}
+        <div className="card-surface rounded-2xl p-6 space-y-4">
+          <h2 className="text-sm font-semibold" style={{ color: "var(--color-text)" }}>Notification Preferences</h2>
 
           {[
-            { key: "weeklyReportEmail" as const, label: "Weekly report emails", desc: "Receive an email when a new report is available" },
-            { key: "newMessageAlert" as const, label: "New message notifications", desc: "Receive an email when the team sends a new message" },
+            { key: "weeklyReportEmail" as const, label: "Weekly report emails", desc: "Get an email notification when a new report is available" },
+            { key: "newMessageAlert" as const, label: "New message alerts", desc: "Get an email when your Reef Ntwrks team sends a message" },
           ].map((pref) => (
-            <label key={pref.key} className="flex items-center justify-between gap-4 cursor-pointer">
+            <div key={pref.key} className="flex items-center justify-between gap-4">
               <div>
-                <p className="text-sm text-white">{pref.label}</p>
-                <p className="text-xs text-gray-500">{pref.desc}</p>
+                <p className="text-sm font-medium" style={{ color: "var(--color-text)" }}>{pref.label}</p>
+                <p className="text-xs mt-0.5" style={{ color: "var(--color-text-muted)" }}>{pref.desc}</p>
               </div>
-              <div
+              <button
+                type="button"
                 onClick={() => setPrefs((p) => ({ ...p, [pref.key]: !p[pref.key] }))}
-                className="w-10 h-5 rounded-full relative flex-shrink-0 transition-colors"
-                style={{ background: prefs[pref.key] ? "#FF6B47" : "rgba(107,114,128,0.4)" }}
+                className="w-11 h-6 rounded-full relative flex-shrink-0 transition-all focus:outline-none"
+                style={{
+                  background: prefs[pref.key] ? "var(--color-coral)" : "var(--color-surface-2)",
+                  border: `1px solid ${prefs[pref.key] ? "var(--color-coral)" : "var(--color-border)"}`,
+                }}
+                role="switch"
+                aria-checked={prefs[pref.key]}
               >
                 <div
-                  className="absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform shadow-sm"
-                  style={{ transform: prefs[pref.key] ? "translateX(1.25rem)" : "translateX(0.125rem)" }}
+                  className="absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-all duration-200"
+                  style={{ transform: prefs[pref.key] ? "translateX(1.375rem)" : "translateX(0.125rem)" }}
                 />
-              </div>
-            </label>
+              </button>
+            </div>
           ))}
         </div>
 
         {message && (
-          <p
-            className="text-sm px-4 py-3 rounded-lg"
+          <div
+            className="flex items-center gap-2 px-4 py-3 rounded-xl text-sm"
             style={{
-              background: message.type === "success" ? "rgba(34,197,94,0.12)" : "rgba(239,68,68,0.12)",
-              color: message.type === "success" ? "#16a34a" : "#ef4444",
+              background: message.type === "success" ? "rgba(34,197,94,0.1)" : "rgba(239,68,68,0.1)",
+              border: `1px solid ${message.type === "success" ? "rgba(34,197,94,0.3)" : "rgba(239,68,68,0.3)"}`,
+              color: message.type === "success" ? "var(--color-success)" : "var(--color-danger)",
             }}
           >
+            <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {message.type === "success"
+                ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              }
+            </svg>
             {message.text}
-          </p>
+          </div>
         )}
 
         <button
           type="submit"
           disabled={saving}
-          className="px-6 py-3 rounded-xl text-sm font-semibold transition-all disabled:opacity-50"
-          style={{ background: "#FF6B47", color: "white" }}
+          className="px-8 py-3 rounded-xl text-sm font-semibold text-white transition-all disabled:opacity-50 hover:opacity-90"
+          style={{ background: "var(--color-coral)" }}
         >
           {saving ? "Saving…" : "Save Changes"}
         </button>

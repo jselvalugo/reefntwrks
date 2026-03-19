@@ -51,7 +51,7 @@ export default async function BriefsPage() {
         </div>
       ) : (
         <div className="space-y-3">
-          {client.briefs.map((brief) => (
+          {client.briefs.map((brief: typeof client.briefs[number]) => (
             <Link
               key={brief.id}
               href={`/portal/briefs/${brief.id}`}
